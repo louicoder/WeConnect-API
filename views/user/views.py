@@ -1,48 +1,87 @@
 from flask import Blueprint, Flask, request, json, jsonify, make_response
 import random
 from models import User, USERS
+import jwt
+import datetime
+from functools import wraps
+from uuid import uuid4
+from werkzeug.security import generate_password_hash, check_password_hash
 
+loggedInUser=[]
 userBlueprint = Blueprint('user', __name__)
+
+SECRETKEY = 'thisISverysecret'
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token')
+        data =''
+        if not token:
+            return jsonify({'message':'token is missing!'}), 403
+        try:
+            data = jwt.decode(token, SECRETKEY)
+        except:
+            return make_response(jsonify({'message':'Token is invalid'})), 403
+
+        return f(*args, **kwargs)
+    return decorated
+
 
 @userBlueprint.route('/api/v1/auth/register', methods=['POST'])
 def createuser():
-    global USERS
+    global USERS    
     
-    # userx = User(random.randint(1, 100000000), request.json['username'], request.json['email'], request.json['password'])
-    # userx = [{"userid":random.randint(1, 100000000), "username":username, "email":email, "password":password}]
-    userid = random.randint(1, 100000)
+    
     username = request.json['username']
     email = request.json['email']
-    password = request.json['password']       
-    USERS.append({"userid":userid, "username":username, "email":email, "password":password})    
+    password = request.json['password']
+    password = generate_password_hash(password)
+    USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})    
     return jsonify({"users":USERS})
     
 
 @userBlueprint.route('/api/v1/auth/getusers', methods=['GET'])
+@token_required
 def getusers():
     global USERS
+    
     if not USERS:
         return jsonify({'message':'No users found in the system'})
     else:
         usersx = USERS
         return jsonify({"USERS":usersx})
+    
 
 @userBlueprint.route('/api/v1/auth/login', methods=['POST'])
 def login():
-    global loggedInUser
-    username=request.json['username']
-    password=request.json['password']
 
-    if USERS:
-        for x in USERS:
-            for k in x:
-                if x['username'] == username and x['password'] == password:
-                    loggedInUser.append({'username':username, 'password':password})
-                    return make_response(jsonify({'message':'login successful'})), 200
-                else:
-                    return make_response(jsonify({'message':'login unsuccessful'})), 401
-    else:
-        return make_response(jsonify({'message':'No users found in the system.'})), 404
+    auth = request.authorization
+    username=auth.username
+    password=auth.password
+
+    if auth:
+        token = jwt.encode({'user':auth.username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
+        print(token)
+        if USERS:
+            for x in USERS:
+                for k in x:
+                    if x['username'] == username and check_password_hash(x['password'], password):                        
+                        return make_response(jsonify({'message':'login successful'})), 200
+                    else:
+                        print('here')
+                        print(USERS)
+                        print(password)
+                        return make_response(jsonify({'message':'login unsuccessful'})), 401
+        else:
+            return make_response(jsonify({'message':'No users found in the system.'})), 404
+        
+
+        return jsonify({'token': token.decode('UTF-8')})
+
+    return make_response(jsonify({'message':'couldnt verify'})), 401
+    
 
 @userBlueprint.route('/api/v1/auth/resetpassword', methods=['PUT'])
 def resetPassword():
@@ -74,12 +113,6 @@ def logout():
     else:
         return make_response(jsonify({'message':'No one logged in so far'}))
 
-@userBlueprint.route('/api/v1/auth/getlogged', methods=['GET'])
-def logged():
-    global loggedInUser
-    if loggedInUser:       
-        return jsonify({'loggedInUser':loggedInUser})
-    else:
-        return make_response(jsonify({'message':'No one logged in so far'}))
+
 
 
