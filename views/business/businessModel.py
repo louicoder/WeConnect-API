@@ -26,7 +26,7 @@ class Business():
         """function for creating a new business. funtion returns a boolean true if a business has been created and false 
         if business is not created."""
         global BUSINESSES
-        result = None
+        result = False
         oldBizListLength = len(BUSINESSES) # length of busines ltist before manipulation.
         #create the list below with precise indexing as illustrated below
         # [0] = userId, [1] = busName, [2] = busLocation, [3] = busCategory, [4] = busDescription
@@ -40,46 +40,47 @@ class Business():
         return result
 
 
-    def checkBusinessExists(self, Id):
+    def checkBusinessExists(self, busId):
         """function to check whether a business Exists or not. function return a boolean true if business exists and
         false if it does not exist."""
+        
         global BUSINESSES
-        resultList=[]
-        if BUSINESSES:            
-            for bus in BUSINESSES:
-                for biz in bus:
-                    if bus['id'] == Id:
-                        print('in here')
-                        resultList.append([bus['busId'], bus['busName'], bus['busLocation'], bus['busCategory'], bus['busDescription']])
-                        return resultList
-                    else:
-                    # result = False#busId doesnt exist
-                        return None
+        if BUSINESSES:
+            for x, y in enumerate(BUSINESSES, 0):
+                for key, val in y.items():
+                    if key == busId:
+                        index = x
+                        return index
         else:
-            return None
+            return -1
         
 
-    def updateBusiness(self, busId, busName, busLocation, busCategory, busDescription):
-        """this function is for updating business details. function returns a boolean true is business was updated 
-        and false for otherwise"""        
+    def updateBusiness(self, busId):
+        """this function is for updating business details. function returns a index to update"""   
+        index = None
+        global BUSINESSES
         if BUSINESSES:
-            for xt in BUSINESSES:
-                for key in xt:
+            for x, y in enumerate(BUSINESSES, 0):
+                for key, val in y.items():
                     if key == busId:
-                        # xt['Id']=busId
-                        xt[0]= busName
-                        xt[1] = busLocation
-                        xt[2]= busCategory
-                        xt[3]= busDescription   
-                        return True
-                    else:
-                        return False
+                        index = x
+                        # BUSINESSES[index]={busId:[busName, busLocation, busCategory, busDescription]}
+                        return index
         else:
-            return False
+            return -1
     
     def deleteBusiness(self, busId):
         """this fuinction is responsible for deleting a business"""
-        pass
+        global BUSINESSES
+        index = None
+        if BUSINESSES:
+            for x, y in enumerate(BUSINESSES, 0):
+                for key, val in y.items():
+                    if key == busId:
+                        index = x
+                        return index
+        else:
+            return -1
 
 
     def getOwnBusinesses(self, userId):
@@ -99,8 +100,8 @@ class Business():
     def getAllBusinesses(self):
         """this function return all businesses that ar available. 
         the function returns a list of all businesses registered."""
-        foundBusinesses = []
-        if len(self.businessList) > 0: # make sure atleast there are some records
-            for x in self.businessList: # x represents each individual business
-                foundBusinesses.append(x)
-        return foundBusinesses
+        global BUSINESSES
+        if BUSINESSES:
+            return BUSINESSES
+        else:
+            return None

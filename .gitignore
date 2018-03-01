@@ -1,5 +1,3 @@
-user/__pycache__/
-business/__pycache__/
-reviews/__pycache__/
-.vscode/
-views/__pycache__
+
+*.vscode/*
+*/*__pycache__/*
