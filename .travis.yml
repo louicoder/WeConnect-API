@@ -1,0 +1,14 @@
+language : python
+
+python:
+  - "3.6"
+
+exclude-paths:
+  - 
+
+install:
+  - pip install nose
+
+script:
+  - nosetest tests/tests.py
+
