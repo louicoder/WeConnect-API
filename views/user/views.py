@@ -10,7 +10,7 @@ loggedInUser=[]
 userBlueprint = Blueprint('user', __name__)
 
 SECRETKEY = 'thisISverysecret'
-
+token = None
 
 def token_required(f):
     @wraps(f)
@@ -30,20 +30,24 @@ def token_required(f):
 
 @userBlueprint.route('/api/v1/auth/register', methods=['POST'])
 def createuser():
-    global USERS    
-    username = request.json['username']
-    email = request.json['email']
-    password = request.json['password']
-    password = generate_password_hash(password)
-    USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})    
-    return jsonify({"users":USERS})
+    global USERS
+    jsn = request.data
+    data= json.loads(jsn)
+    if len(data.keys()) != 3:
+        return jsonify({'message':'cannot register because of missing fields, check email,username and password'})
+
+    username = data['username']
+    email = data['email']
+    password = data['password']
+    password = generate_password_hash(password)            
+    USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})
+    return majsonify({"message":"User has been Successfully registered."})
     
 
 @userBlueprint.route('/api/v1/auth/getusers', methods=['GET'])
 @token_required
 def getusers():
-    global USERS
-    
+    global USERS    
     if not USERS:
         return jsonify({'message':'No users found in the system'})
     else:
@@ -72,9 +76,9 @@ def login():
                         print('here')
                         print(USERS)
                         print(password)
-                        return make_response(jsonify({'message':'login unsuccessful'})), 401
+                        return make_response(jsonify({'message':'unauthorised access'})), 401
         else:
-            return make_response(jsonify({'message':'No users found in the system.'})), 404
+            return make_response(jsonify({'message':'No users found in the system'})), 404
 
         return jsonify({'token': token.decode('UTF-8')})
 
@@ -108,13 +112,7 @@ def resetPassword():
 def logout():
     global loggedInUser
     token = request.args.get('token')
-    try:
-        payload = jwt.decode(token, SECRETKEY)
-        return payload['sub']
-    except jwt.ExpiredSignatureError:
-        return jsonify({'message':'Signature expired. Please log in again.'})
-    except jwt.InvalidTokenError:
-        return jsonify({'message':'Invalid token. Please log in again.'})
+    pass
 
 
 
