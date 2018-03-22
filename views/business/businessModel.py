@@ -12,17 +12,18 @@ class Business():
     delete a business and update business the functions in this class include
     createBusiness, checkBusinessExists, updateBusiness, deleteBusiness, getOwnBusinesses, getAllBusinesses"""
     
-    def __init__(self, busId, busName, busLocation, busCategory, busDescription):
+    def __init__(self, busId, busName, userId, busLocation, busCategory, busDescription):
         # initialise the variables here. business id,user id, business name, business location,
         #  business category,business description.
         self.busId=busId
         self.busName = busName
+        self.userId = userId
         self.busLocation=busLocation
         self.busCategory=busCategory
         self.busDescription = busDescription
         self.businessList = []
 
-    def createBusiness(self, Id, busName, busLocation, busCategory, busDescription):
+    def createBusiness(self, busId, busName, userId, busLocation, busCategory, busDescription):
         """function for creating a new business. funtion returns a boolean true if a business has been created and false 
         if business is not created."""
         global BUSINESSES
@@ -30,33 +31,18 @@ class Business():
         oldBizListLength = len(BUSINESSES) # length of busines ltist before manipulation.
         #create the list below with precise indexing as illustrated below
         # [0] = userId, [1] = busName, [2] = busLocation, [3] = busCategory, [4] = busDescription
-        BUSINESSES.append({Id:[busName, busLocation, busCategory, busDescription]})
+        BUSINESSES.append({busId:[busName, userId, busLocation, busCategory, busDescription]})
         
         if len(BUSINESSES) > oldBizListLength:
             result = True #incase creating a business is successful return true.
         else:
-            result = False #incase creating a business failes return False.
-        
+            result = False #incase creating a business failes return False.        
         return result
 
-
-    def checkBusinessExists(self, busId):
+    @staticmethod
+    def checkBusinessExists(busId):
         """function to check whether a business Exists or not. function return a boolean true if business exists and
         false if it does not exist."""
-        
-        global BUSINESSES
-        if BUSINESSES:
-            for x, y in enumerate(BUSINESSES, 0):
-                for key, val in y.items():
-                    if key == busId:
-                        index = x
-                        return index
-        else:
-            return -1
-        
-
-    def updateBusiness(self, busId):
-        """this function is for updating business details. function returns a index to update"""   
         index = None
         global BUSINESSES
         if BUSINESSES:
@@ -64,12 +50,29 @@ class Business():
                 for key, val in y.items():
                     if key == busId:
                         index = x
-                        # BUSINESSES[index]={busId:[busName, busLocation, busCategory, busDescription]}
                         return index
         else:
-            return -1
+            return index
+        
+    @staticmethod
+    def updateBusiness(busId):
+        """this function is for updating business details. function returns a index to update"""   
+        index = None
+        global BUSINESSES
+        biz = []
+        if BUSINESSES:
+            for x, y in enumerate(BUSINESSES, 0):
+                for key, val in y.items():
+                    if key == busId:
+                        index = x
+                        biz.append([index,val])
+                        # BUSINESSES[index]={busId:[busName, busLocation, busCategory, busDescription]}
+                        return biz
+        else:
+            return biz
     
-    def deleteBusiness(self, busId):
+    @staticmethod
+    def deleteBusiness(busId):
         """this fuinction is responsible for deleting a business"""
         global BUSINESSES
         index = None
@@ -82,7 +85,7 @@ class Business():
         else:
             return -1
 
-
+    # @staticmethod
     def getOwnBusinesses(self, userId):
         """function checks for a peron's own created businesses. function returns 
         a list of businesses attached to the passed userId"""        

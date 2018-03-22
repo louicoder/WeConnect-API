@@ -41,7 +41,7 @@ def createuser():
     password = data['password']
     password = generate_password_hash(password)            
     USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})
-    return majsonify({"message":"User has been Successfully registered."})
+    return jsonify({"message":"User has been Successfully registered."})
     
 
 @userBlueprint.route('/api/v1/auth/getusers', methods=['GET'])
@@ -70,7 +70,7 @@ def login():
             for x in USERS:
                 for k in x:
                     if x['username'] == username and check_password_hash(x['password'], password):
-                        loggedInUser.append({'id':x['userid'], 'username':x['username']})
+                        loggedInUser.append(x['userid'], x['username'])
                         return make_response(jsonify({'message':'login successful'})), 200
                     else:
                         print('here')
