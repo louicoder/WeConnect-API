@@ -1,5 +1,6 @@
 import flask
 from flask import Flask
+# from views.user.views import userBlueprint
 from views.user.views import userBlueprint
 from views.business.views import businessBlueprint
 from views.reviews.views import reviewBlueprint

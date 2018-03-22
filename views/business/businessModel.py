@@ -83,7 +83,7 @@ class Business():
                         index = x
                         return index
         else:
-            return -1
+            return index
 
     # @staticmethod
     def getOwnBusinesses(self, userId):

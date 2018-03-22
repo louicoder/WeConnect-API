@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import Blueprint, Flask, request, json, jsonify, make_response
 from .reviewModel import Reviews, REVIEWS
 from ..business.views import BUSINESSES
+from uuid import uuid4
 
 
 reviewBlueprint = Blueprint('reviews', __name__)
@@ -23,11 +24,10 @@ def createReview(id):
     else:        
         for x,y in enumerate(BUSINESSES, 0):
             for key, val in y.items():
-                if key == id:
-                    print(key)
-                    res = revObj.createNewReview(data['id'], id, data['review'])
+                if key == id:                    
+                    res = revObj.createNewReview(str(uuid4()), id, data['review'])
                     if res:
-                        return jsonify({'message':'Review has been Successfully Created.'})
+                        return jsonify({'message':'Review has been Successfully Created.', 'review':REVIEWS})
                     else:
                         return jsonify({'message':'Review was not created'})
                 else:
@@ -37,16 +37,22 @@ def createReview(id):
 @reviewBlueprint.route('/api/businesses/<string:id>/reviews', methods=['GET'])
 def getBusReviews(id):
     global REVIEWS
-
-    foundReviews =[]
+    id = id
     if not REVIEWS:
-        return jsonify({'message':'No reviews For any business Exst so far!'})
+        return jsonify({'message':'No reviews For any business Exist so far!'})
     else:
-        for x,y in enumerate(REVIEWS, 0):
-            for key, val in y.items():
-                if key == id:
-                    foundReviews.append(REVIEWS[x])
-                    if len(foundReviews) > 0:
-                        return jsonify({'Business Reviews':foundReviews})
-                    else:
-                        return jsonify({'message':'No found Reviews for that business'})
+        res = Reviews.getBizReview(id)
+        print(res)
+        if not res:
+            return jsonify({'message': 'no review found for that business'})
+        else:
+            return jsonify({'reviews': res})
+
+        # for x,y in enumerate(REVIEWS, 0):
+        #     for key, val in y.items():
+        #         if key == id:
+        #             foundReviews.append(REVIEWS[x])
+        #             if len(foundReviews) > 0:
+        #                 return jsonify({'Business Reviews':foundReviews})
+        #             else:
+        #                 return jsonify({'message':'No found Reviews for that business'})

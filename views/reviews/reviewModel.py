@@ -1,4 +1,5 @@
 from ..business.views import BUSINESSES
+from ..business.views import Business
 REVIEWS=[]
 
 
@@ -33,24 +34,20 @@ class Reviews():
 
         return result
 
-    def getBizReviews(self, busId):
+    @staticmethod
+    def getBizReview(busId):
         """this function returns reviews that belong to a particular business passed as the argument busId.
         functions returns a list of reviews attached to that business through the busId"""
         global REVIEWS
-        foundReviews = []
-        # loop through the list to see which reviews have the passed userId as their 3rd index value
-        for x in REVIEWS:
-            for y in x.values():
-                if y[2] == 1:
-                    foundReviews.append(y)
+        busId = busId
+        foundReviews =[]
+        # res = Business.checkBusinessExists(busId)
+        # print(res)        
         
+        if REVIEWS:
+            for x in REVIEWS:
+                for k, v in x.items():
+                    if v[0] == busId:
+                        foundReviews.append(v)
+       
         return foundReviews
-
-    def getAllReviews(self):
-        """function returns all reviews on all businesses"""
-        global REVIEWS
-
-        if not REVIEWS:
-            return None
-        else:
-            return REVIEWS
