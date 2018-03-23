@@ -6,10 +6,6 @@ from flask import Blueprint, Flask, request, json, jsonify, make_response, Respo
 from ..run import app
 from uuid import uuid4
 
-# from views.user.views import *
-# from views.business.views import *
-# from views.reviews.views import *
-
 
 class Test_User_Routes(unittest.TestCase):
 
@@ -17,7 +13,7 @@ class Test_User_Routes(unittest.TestCase):
         # userObj = User('23423423', 'louis', 'louis@eemail.com', 'This#is#secret')
         # self.assertIsInstance(userObj, User)
         self.client = app.test_client()
-        self.response = self.client.get('/', follow_redirects=True)        
+        # self.response = self.client.get('/', follow_redirects=True)
         
 
     def test_user_secrey_key(self):
