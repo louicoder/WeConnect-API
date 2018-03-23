@@ -20,8 +20,6 @@ def createBusiness():
     data = json.loads(jsn)
     busx = Business(str(uuid4()), data['name'], loggedInUser[0], data['location'], data['category'], data['description'])
     res = busx.createBusiness(str(uuid4()), data['name'], loggedInUser[0], data['location'], data['category'], data['description'])
-    # res = bus.createBusiness(data['id'], data['name'], data['location'], data['category'], data['description'])
-    # res = bus.createBusiness = {12:['cmopany', 'locatioon', 'category', 'description']}
     
     if res:
         return jsonify({'message': 'Business successfully created'})
@@ -63,10 +61,9 @@ def updatebusiness(id):
         exists = Business.checkBusinessExists(id)
         busId = ''
 
-        if exists or exists == 0:
-            # lets get the biz id
-            print(BUSINESSES[exists])
-            res = BUSINESSES[exists]
+        if exists or exists == 0:           
+            # print(BUSINESSES[exists])
+            res = BUSINESSES[exists] # lets get
             for k, v in res.items():
                 busId = k
             
@@ -75,27 +72,18 @@ def updatebusiness(id):
         else:
             return jsonify({'message': 'no records of that business exists', 'exists':exists})
 
-
-        # if res or res == 0:
-        #     BUSINESSES[res] = {data['id']:[data['name'], data['location'], data['category'], data['description']]}
-        #     return jsonify({'message':'Business Updated Sucessfully'})
-        # else:
-        #     return jsonify({'message':'Business was not updated'})
-
-
         
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['DELETE'])
 def deletebusiness(id):
     global BUSINESSES    
 
-    if BUSINESSES:
-        # res = Business(1232312, 'name', 'location', 'category', 'description')
+    if BUSINESSES:        
         result = Business.deleteBusiness(id)
-        print(result)
+        # print(result)
         if result or result == 0:
             BUSINESSES.pop(result)
-            return jsonify({'message':'Business has been successfully deleted'})
+            return jsonify({'message':'Business has been successfully deleted'}), 200
         else:
-            return jsonify({'message':'No business has that id.'})
+            return jsonify({'message':'No business has that id, nothing was deleted.'}), 404
     else:
-        return jsonify({'message': 'No records of any Business Exist.'})
+        return jsonify({'message': 'No records of any Business Exist.'}), 404
