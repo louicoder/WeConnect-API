@@ -72,10 +72,7 @@ def login():
                     if x['username'] == username and check_password_hash(x['password'], password):
                         loggedInUser.append(x['userid'], x['username'])
                         return make_response(jsonify({'message':'login successful'})), 200
-                    else:
-                        print('here')
-                        print(USERS)
-                        print(password)
+                    else:                        
                         return make_response(jsonify({'message':'unauthorised access'})), 401
         else:
             return make_response(jsonify({'message':'No users found in the system'})), 404

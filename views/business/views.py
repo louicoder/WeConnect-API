@@ -77,7 +77,7 @@ def updatebusiness(id):
 def deletebusiness(id):
     global BUSINESSES    
 
-    if BUSINESSES:        
+    if BUSINESSES:
         result = Business.deleteBusiness(id)
         # print(result)
         if result or result == 0:
