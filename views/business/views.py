@@ -10,10 +10,10 @@ from ..user.views import loggedInUser, token_required
 from flasgger import Swagger, swag_from
 
 businessBlueprint = Blueprint('business', __name__)
-loggedInUser= ['773458ufdssdfs908098sdf']
+# loggedInUser= ['773458ufdssdfs908098sdf']
 
 @businessBlueprint.route('/api/businesses', methods=['POST'])
-# @token_required
+@token_required
 @swag_from('createBusiness.yml')
 def createBusiness():
     global BUSINESSES
@@ -64,7 +64,7 @@ def createBusiness():
 
 
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['GET'])
-# @token_requiredn_required
+@token_required
 @swag_from('retrieveBusiness.yml')
 def getOneBusiness(id):
     """ function to retrieve a single business by id"""
@@ -83,7 +83,7 @@ def getOneBusiness(id):
 
 
 @businessBlueprint.route('/api/businesses', methods=['GET'])
-# @token_requiredn_required
+@token_required
 @swag_from('retrieveAllBusinesses.yml')
 def getAllBusinesses():
     """"Function that returns all registered businesses"""
@@ -94,6 +94,7 @@ def getAllBusinesses():
         return jsonify({'Businesses': BUSINESSES}), 200
 
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['PUT'])
+@token_required
 @swag_from('updateBusiness.yml')
 def updatebusiness(id):
     """Function to update business using the id"""
@@ -118,7 +119,7 @@ def updatebusiness(id):
 
         
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['DELETE'])
-# @token_requiredn_required
+@token_required
 @swag_from('deleteBusiness.yml')
 def deletebusiness(id):
     global BUSINESSES    
