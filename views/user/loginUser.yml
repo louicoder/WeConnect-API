@@ -1,0 +1,38 @@
+Endpoint for logging a User in
+---
+  tags:
+    - User
+  consumes:
+    - application/json
+  produces:
+    - application/json
+  parameters:
+    - name: x-access-token
+      in: header
+      name: body
+      in: body
+      description: JWT token authorization
+      required: true      
+  definitions:
+    User:
+      type: object
+      properties:
+        # id:
+        #   type: integer
+        #   format: int64
+        username:
+          type: string        
+        password:
+          type: string
+  responses:
+    200:
+      description: You have successfully logged in
+      schema:
+        $ref: '#/definitions/User'      
+      examples:
+        [{
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MjIyMzM2MDgsImlkIjoxfQ.wx_sNnmhdUOtG4ohL-anyhpaQZZAgEDsy1SJiiSP55s"
+          
+        }]
+    401:
+      description: Could not login, please try again
