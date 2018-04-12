@@ -2,7 +2,10 @@ import unittest
 from flask import Blueprint, Flask, request, json, jsonify, make_response, Response
 # from views.business.businessModel import Business
 # from views.user.userModel import User
-# from ..views.user.views import 
+# from ..views.user.views import
+from ..views.business.businessModel import Business
+from ..view.user.userModel import User
+from ..views.reviews.reviewModel import Reviews
 from ..run import app
 from uuid import uuid4
 
@@ -10,7 +13,8 @@ from uuid import uuid4
 class Test_User_Routes(unittest.TestCase):
 
     def setUp(self):
-        # userObj = User('23423423', 'louis', 'louis@eemail.com', 'This#is#secret')
+        userObj1 = User(str(uuid4()), 'louis', 'louis@eemail.com', 'This#is#secret')
+        userObj2 = User()
         # self.assertIsInstance(userObj, User)
         self.client = app.test_client()
         # self.response = self.client.get('/', follow_redirects=True)
@@ -26,7 +30,7 @@ class Test_User_Routes(unittest.TestCase):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"userid":str(uuid4()), "username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
         response_data = json.loads(response.data.decode())
-        self.assertEqual('User has been Successfully registered.', response_data['message'])
+        self.assertEqual(200, response_data['message'])
         
 class Test_Business_Routes(unittest.TestCase):
 
