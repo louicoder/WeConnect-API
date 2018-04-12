@@ -19,8 +19,8 @@ class Reviews():
         self.busId = busId
         self.review = review
 
-    
-    def createNewReview(self, reviewId, busId, review):
+    @staticmethod
+    def createNewReview(reviewId, busId, review):
         """function to create a new review. function return a boolean whether review was created or not"""
         global REVIEWS
         result = False

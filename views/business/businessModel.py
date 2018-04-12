@@ -1,3 +1,4 @@
+from flask import jsonify
 #this is the business class handling all business logic
 
 ######################################
@@ -108,3 +109,6 @@ class Business():
             return BUSINESSES
         else:
             return None
+
+    # def returnJson(self):
+    #     return jsonify({'name':self.busName, 'userid':self.userId, 'id':self.busId, 'location':self.busLocation, 'category':self.busCategory, 'description':self.busDescription})
