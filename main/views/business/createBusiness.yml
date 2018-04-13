@@ -11,11 +11,11 @@ Endpoint for creating a new Business
       in: header
       type: string
       description: JWT token authorization
-      # required: true
+      required: true
     - name: body
       in: body
       description: Business Details
-      required: true
+      # required: true
       schema :
         $ref: '#/definitions/createBusiness'
   definitions:

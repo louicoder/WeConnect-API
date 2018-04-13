@@ -6,22 +6,25 @@ Endpoint for logging a User in
     - application/json
   produces:
     - application/json
-  parameters:
-    - name: x-access-token
-      in: header
-      name: body
+  parameters:    
+    - name: body
       in: body
-      description: JWT token authorization
-      required: true      
+      description: Login For a User
+      schema:
+        $ref: '#/definitions/userLogin'
   definitions:
     User:
       type: object
-      properties:
-        # id:
-        #   type: integer
-        #   format: int64
+      properties:       
         username:
           type: string        
+        password:
+          type: string
+    userLogin:
+      type: object
+      properties:
+        username:
+          type: string
         password:
           type: string
   responses:

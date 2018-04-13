@@ -15,7 +15,7 @@ token = None
 
 def token_required(f):
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def decorated(*args, **kwargs):        
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
         data =''
@@ -37,20 +37,20 @@ def createuser():
     jsn = request.data
     data= json.loads(jsn)
     if len(data.keys()) != 3:
-        return jsonify({'message':'cannot register because of missing fields, check email,username and password'})
+        return jsonify({'message':'cannot register because of missing fields, check email,username and password'}), 400 #bad request
     
     specialChars = ['@', '#', '$', '%', '^', '&', '*', '!', '(', ')', '/'] #, '(', ')', '?', '/', '\', '-']
     username = data['username']
     for x in username:
         if x in specialChars:
-            return jsonify({'message':'username contains special characters, try again'})
+            return jsonify({'message':'username contains special characters, try again'}), 400 #bad request
 
     # usernames=[]
     # print(USERS)
     for x in USERS:
         for k, v in x.items():
             if v == data['username']:            
-                return jsonify({'message':'user already exists'}), 401    
+                return jsonify({'message':'user already exists'}), 400 #bad request
     
 
     if data['username'] and data['email'] and data['password'] and len(data['username']):
@@ -60,7 +60,7 @@ def createuser():
         password = generate_password_hash(password)            
         USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})
         print(USERS)
-        return jsonify({"message":"User has been Successfully registered."})    
+        return jsonify({"message":"User has been Successfully registered."}), 200
 
 @userBlueprint.route('/api/v1/auth/getusers', methods=['GET'])
 # @token_required
@@ -77,7 +77,7 @@ def getusers():
 @swag_from('loginUser.yml')
 def login():
 
-    auth = request.authorization    
+    auth = request.authorization
 
     if auth:
         username=auth.username
@@ -102,21 +102,21 @@ def login():
     
 
 @userBlueprint.route('/api/v1/auth/resetpassword', methods=['PUT'])
-@token_required
+# @token_required
 @swag_from('resetUserPassword.yml')
 def resetPassword():
     global USERS
     global loggedInUser
     
     if len(loggedInUser) == 0:
-        return jsonify({"message":"please first login"})
+        return jsonify({"message":"please first login"}), 401
 
     for x in loggedInUser:
         for y in x:
             username = x['username']
 
     if not USERS:
-        return jsonify({'message': 'no users found in system'})
+        return jsonify({'message': 'no users found in system'}), 404
     else:
         for x in USERS:
             for k in x:
@@ -128,7 +128,7 @@ def resetPassword():
                     return jsonify({'message':'password change was not successful'}), 400
 
 @userBlueprint.route('/api/v1/auth/logout', methods=['POST'])
-@token_required
+# @token_required
 @swag_from('logoutUser.yml')
 def logout():
     global loggedInUser

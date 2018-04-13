@@ -42,21 +42,21 @@
 #     if x in specialChars:
 #         print('yes')
 
-bizneses = [
-        {
-            "4bead459-f1b5-4f2c-9fc7-f47a1dfcfd80": [
-                "business1",
-                "773458ufdssdfs908098sdf",
-                "kampala",
-                "tech",
-                "a technology company"
-            ]
-        }
-    ]
+# bizneses = [
+#         {
+#             "4bead459-f1b5-4f2c-9fc7-f47a1dfcfd80": [
+#                 "business1",
+#                 "773458ufdssdfs908098sdf",
+#                 "kampala",
+#                 "tech",
+#                 "a technology company"
+#             ]
+#         }
+#     ]
 
-biz = 'business1'
+# biz = 'business1'
 
-for x in bizneses:
-    for k, v in x.items():
-        if v[0] == biz:
-            print('exists')
+# for x in bizneses:
+#     for k, v in x.items():
+#         if v[0] == biz:
+#             print('exists')

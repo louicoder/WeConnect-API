@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/louiCoder/WeConnect-API.svg?branch=master)](https://travis-ci.org/louiCoder/WeConnect-API)
+
 # WeConnect-API
 WeConnect API using Python, Flask-RestFul 
 

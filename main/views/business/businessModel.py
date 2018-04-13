@@ -1,3 +1,4 @@
+from flask import jsonify
 #this is the business class handling all business logic
 
 ######################################
