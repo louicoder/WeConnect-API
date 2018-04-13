@@ -1,9 +1,8 @@
 import flask
-from flask import Flask
-# from views.user.views import userBlueprint
-from views.user.views import userBlueprint
-from views.business.views import businessBlueprint
-from views.reviews.views import reviewBlueprint
+from flask import Flask, redirect
+from . views.user.views import userBlueprint
+from . views.business.views import businessBlueprint
+from . views.reviews.views import reviewBlueprint
 from flasgger import Swagger
 from flasgger import swag_from
 
@@ -20,12 +19,17 @@ template = {
         "WeConnect API with data structures",
         "description":
         "WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with.", "version":"1.0.0"},
-    "schemes": ["http", "https"]
+    "schemes": ["http", "https"],
+    "specs_route":"/apidocs/"
 }
 
 
 #swagger docs instanciation
 swagger = Swagger(app, template=template)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/')
+def index():
+    return redirect('/apidocs/')
+
+# if __name__ == '__main__':
+#     app.run(debug=True)

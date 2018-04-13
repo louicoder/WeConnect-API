@@ -7,7 +7,7 @@ Endpoint retrieving a list of all registered businesses
       in: header
       type: string
       description: JWT token authorization
-      # required: true
+      required: true
     # - name: page
     #   in: query
     #   type: integer

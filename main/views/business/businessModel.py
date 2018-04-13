@@ -109,6 +109,3 @@ class Business():
             return BUSINESSES
         else:
             return None
-
-    # def returnJson(self):
-    #     return jsonify({'name':self.busName, 'userid':self.userId, 'id':self.busId, 'location':self.busLocation, 'category':self.busCategory, 'description':self.busDescription})

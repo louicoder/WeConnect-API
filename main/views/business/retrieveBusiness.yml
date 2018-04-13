@@ -7,7 +7,7 @@ Endpoint retrieving a single business
       in: header
       type: string
       description: JWT token authorization
-      required: true
+      # required: true
     - name: businessId
       in: path
       description: "id of the business to return"
@@ -21,7 +21,7 @@ Endpoint retrieving a single business
         id:
           type: integer
           format: int64
-        user_id:
+        userid:
           type: integer
           format: int64
         name:
@@ -32,10 +32,10 @@ Endpoint retrieving a single business
           type: string
         description:
           type: string
-        date_created:
+        dateCreated:
           type: string
           format: date-time
-        date_modified:
+        dateModified:
           type: string
           format: date-time
         
