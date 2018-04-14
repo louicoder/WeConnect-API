@@ -49,6 +49,7 @@ def createBusiness():
     #create class object for business class 
     busx = Business(str(uuid4()), data['name'], loggedInUser[0], data['location'], data['category'], data['description'])
 
+    #check length of business name.
     if len(bizname) < 5:
         return jsonify({'message':'business name is short, it must be 5 characters and above'}), 400 #bad request
     
@@ -67,7 +68,7 @@ def createBusiness():
 
 
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['GET'])
-# @token_required
+@token_required
 @swag_from('retrieveBusiness.yml')
 def getOneBusiness(id):
     """ function to retrieve a single business by id"""
@@ -91,7 +92,7 @@ def getOneBusiness(id):
 
 
 @businessBlueprint.route('/api/businesses', methods=['GET'])
-# @token_required
+@token_required
 @swag_from('retrieveAllBusinesses.yml')
 def getAllBusinesses():
     """"Function that returns all registered businesses"""
@@ -102,7 +103,7 @@ def getAllBusinesses():
         return jsonify({'Businesses': BUSINESSES}), 200
 
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['PUT'])
-# @token_required
+@token_required
 @swag_from('updateBusiness.yml')
 def updatebusiness(id):
     """Function to update business using the id"""
@@ -127,7 +128,7 @@ def updatebusiness(id):
 
         
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['DELETE'])
-# @token_required
+@token_required
 @swag_from('deleteBusiness.yml')
 def deletebusiness(id):
     global BUSINESSES    

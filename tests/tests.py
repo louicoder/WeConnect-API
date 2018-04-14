@@ -1,12 +1,13 @@
 import unittest
-from flask import Blueprint, Flask, request, json, jsonify, make_response, Response
+# from flask import Blueprint, Flask, request, json, jsonify, make_response, Response
+from flask import redirect, jsonify, request, Response, json
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..main.views.business.businessModel import Business, BUSINESSES
 from ..main.views.user.userModel import User
 from ..main.views.user.views import SECRETKEY
 from ..main.views.reviews.reviewModel import Reviews
 from ..main import app
-from uuid import uuid4
+# from uuid import uuid4
 
 
 
@@ -35,7 +36,7 @@ class Test_User_Routes(unittest.TestCase):
         
     def test_user_fields_createUser(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
-                                    data=json.dumps({"userid":str(uuid4()), "username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
+                                    data=json.dumps({"userid":234234232, "username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
         
         self.assertTrue(400, response.status_code)
 
