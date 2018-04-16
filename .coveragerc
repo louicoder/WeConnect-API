@@ -1,0 +1,23 @@
+
+[report]
+omit = 
+    */__pycache__/*
+    *.pyc
+    *migrations/*
+    *venv/*
+    *asyncio/*           
+    *concurrent/*     
+    *ctypes/*                   
+    *decimal.py                         
+    *encodings/*               
+    *hmac.py                             
+    *html/*
+    *http/cookiejar.py 
+    *mimetypes.py
+    *multiprocessing/*
+    *numbers.py      
+    *stringprep.py                       
+    *uuid.py  
+    */site-packages/*
+    */http/*
+    */cgi.py*
