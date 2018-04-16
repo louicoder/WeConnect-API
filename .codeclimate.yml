@@ -1,0 +1,15 @@
+
+version: "2"
+languages:
+  Python: true
+exclude_paths:
+# - tests/*
+# - static/*
+# - 
+checks:
+  method-complexity:
+    config:
+      threshold: 50
+  argument-count:
+    config:
+      threshold: 8
