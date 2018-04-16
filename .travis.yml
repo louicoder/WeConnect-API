@@ -8,8 +8,7 @@ python:
 
 install:
   - pip install -r requirements.txt
-  - pip install nose
 
 script:
-  - pytest tests/tests.py
+  - nosetests tests/tests.py
 

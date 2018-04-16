@@ -9,7 +9,6 @@ from ..main.views.reviews.reviewModel import Reviews
 from ..main import app
 # from uuid import uuid4
 
-
 class Test_User_Routes(unittest.TestCase):
 
     def setUp(self):

@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/louiCoder/WeConnect-API.svg?branch=master)](https://travis-ci.org/louiCoder/WeConnect-API)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/maintainability)](https://codeclimate.com/github/louiCoder/WeConnect-API/maintainability)
+
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/test_coverage)](https://codeclimate.com/github/louiCoder/WeConnect-API/test_coverage)
+
 # WeConnect-API
 WeConnect API using Python, Flask-RestFul 
 
