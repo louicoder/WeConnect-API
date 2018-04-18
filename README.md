@@ -12,29 +12,32 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 #### Author:
     Louis Musanje Michael
 
-##### project captures the following routes 
+#### project captures the following routes 
 
-* **POST /api/auth/register** - creating user account
-* **POST /api/auth/login** - logging in for a user
-* **POST /api/auth/logout** - Logs out a user
-* **POST /api/auth/reset-password** - Password reset
-* **POST /api/businesses** - Registering a business
-* **PUT /api/businesses/_businessId_** - Updatesing a business profile
-* **DELETE /api/businesses/_businessId_** - delete/remove a business profile
-* **GET /api/businesses** - gets all avaliable businesses
-* **GET /api/businesses/_businessId_** - Get a business
-* **POST /api/businesses/_businessId_/reviews** - Add a review for a business
-* **GET /api/businesses/_businessId_/reviews** - Get all reviews for a business
+| REQUEST | ROUTE | FUNCTIONALITY |
+| ------- | ----- | ------------- |
+| POST | /api/auth/register | creating user account |
+| POST | api/auth/login | logging in for a user |
+| POST | api/auth/logout | Logs out a user |
+| POST | api/auth/reset-password | Password reset |
+| POST | api/businesses | Registering a business |
+| PUT | api/businesses/_businessId_ | Updating a business profile |
+| DELETE | api/businesses/_businessId_ | delete/remove a business profile |
+| GET | api/businesses | gets all avaliable businesses |
+| GET | api/businesses/_businessId_ | Get a business |
+| POST | api/businesses/_businessId_/reviews | Add a review for a business |
+| GET | api/businesses/_businessId_/reviews | Get all reviews for a business |
 
 
-## Technologies used to develop this site
+
+#### Technologies and Tools used to develop this site
 1. Bootstrap Framework (Html5 + CSS3 + Javascript)
 2. Jquery
 3. Python
 4. Postman
 5. VSCODE (for editing and debugging)
 
->###### Project dependencies Will always be found in the file below
+#### Project dependencies Will always be found in the file below
     requirements.txt
 
 #### Set up project to get it up and running
@@ -53,10 +56,11 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
       
 #### To run the unit tests invoke/run the command below.
 
-      $ nosetests tests/tests.py
+      $ nosetests tests 
+
 #### or for detailed output on unit tests run with verbose.
 
-      $ nosetests -v tests/tests.py
+      $ nosetests --with-coverage -v
       
 #### To run the application invoke the command below.
 
