@@ -21,12 +21,12 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 | POST | api/auth/logout | Logs out a user |
 | POST | api/auth/reset-password | Password reset |
 | POST | api/businesses | Registering a business |
-| PUT | api/businesses/_businessId_ | Updating a business profile |
-| DELETE | api/businesses/_businessId_ | delete/remove a business profile |
+| PUT | api/businesses/<_businessId_> | Updating a business profile |
+| DELETE | api/businesses/<_businessId_> | delete/remove a business profile |
 | GET | api/businesses | gets all avaliable businesses |
-| GET | api/businesses/_businessId_ | Get a business |
-| POST | api/businesses/_businessId_/reviews | Add a review for a business |
-| GET | api/businesses/_businessId_/reviews | Get all reviews for a business |
+| GET | api/businesses/<_businessId_> | Get a business |
+| POST | api/businesses/<_businessId_>/reviews | Add a review for a business |
+| GET | api/businesses/<_businessId_>/reviews | Get all reviews for a business |
 
 
 
