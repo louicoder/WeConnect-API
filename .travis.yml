@@ -3,13 +3,17 @@ language : python
 python:
   - "3.6"
 
+#lets install all the dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
 
+#script to run tests
 script:
   - nosetests --with-coverage
   - coverage report
 
+#update coveralls on cchanges
 after_success:
   - coveralls
 

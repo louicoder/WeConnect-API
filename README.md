@@ -30,7 +30,7 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 
 
 
-#### Technologies and Tools used to develop this site
+#### Technologies and Tools used to develop this App
 1. Bootstrap Framework (Html5 + CSS3 + Javascript)
 2. Jquery
 3. Python
