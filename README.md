@@ -4,6 +4,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/louiCoder/WeConnect-API/badge.svg?branch=feature)](https://coveralls.io/github/louiCoder/WeConnect-API?branch=feature)
 
+<!-- [![Test Coverage](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/test_coverage)](https://codeclimate.com/github/louiCoder/WeConnect-API/test_coverage) -->
+
 # WeConnect-API
 WeConnect API using Python, Flask-RestFul 
 
@@ -44,11 +46,16 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 * clone repository from link below  
   
       $ git clone https://github.com/louiCoder/WeConnect-API.git
+
 * Set up Virtual environment by running commands below
 
       * virtualenv venv
       * source /venv/Scripts/activate (for linux/mac)
       * /venv/Scripts/activate.exe (for windows)
+
+#### The application is Hosted on Heroku on the link below.
+    
+    [we-connect-louis.com](http://we-connect-louis.herokuapp.com) or [we-connect-louis.com/apidocs]http://we-connect-louis.herokuapp.com/apidocs/
 
 * Get all project dependencies by running the command below.
 
@@ -56,7 +63,7 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
       
 #### To run the unit tests invoke/run the command below.
 
-      $ nosetests tests 
+      $ nosetests tests or nosetests
 
 #### or for detailed output on unit tests run with verbose.
 
