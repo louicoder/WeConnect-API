@@ -53,7 +53,7 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
     
 http://we-connect-louis.herokuapp.com or http://we-connect-louis.herokuapp.com/apidocs/
 
-* Get all project dependencies by running the command below.
+#### Get all project dependencies by running the command below.
 
       $ pip freeze -r requirements.txt
       
