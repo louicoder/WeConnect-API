@@ -51,7 +51,7 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 
 #### The application is Hosted on Heroku on the link below.
     
-    http://we-connect-louis.herokuapp.com or http://we-connect-louis.herokuapp.com/apidocs/
+http://we-connect-louis.herokuapp.com or http://we-connect-louis.herokuapp.com/apidocs/
 
 * Get all project dependencies by running the command below.
 
