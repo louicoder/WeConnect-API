@@ -3,11 +3,11 @@ Endpoint retrieving a single business
   tags:
     - Business
   parameters:
-    - name: x-access-token
-      in: header
-      type: string
-      description: JWT token authorization
-      # required: true
+    # - name: x-access-token
+    #   in: header
+    #   type: string
+    #   description: JWT token authorization
+    #   # required: true
     - name: businessId
       in: path
       description: "id of the business to return"
@@ -57,6 +57,6 @@ Endpoint retrieving a single business
         "userid": 1
       }]
     404:
-      description: No businesses registered with that id currently
-    401:
-      description: Invalid token / User signed out
+      description: no records of any business exist
+    400:
+      description: no records of that business exist

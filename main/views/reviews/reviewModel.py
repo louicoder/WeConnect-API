@@ -31,17 +31,16 @@ class Reviews():
             result = True #this means the list has changed
         else:
             result = False #this means the list hasn't changed
-
         return result
 
     @staticmethod
-    def getBizReview(busId):
+    def get_business_reviews(busId):
         """this function returns reviews that belong to a particular business passed as the argument busId.
         functions returns a list of reviews attached to that business through the busId"""
         global REVIEWS
         busId = busId
         foundReviews =[]
-        # res = Business.checkBusinessExists(busId)
+        # res = Business.get_one_business(busId)
         # print(res)        
         
         if REVIEWS:

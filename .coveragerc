@@ -32,7 +32,7 @@ omit =
     */jinja2/*
     */flask/*
     */idna/*
-    *itsdangerous
+    */itsdangerous.py
     */chardet/*
     */blinker/*
     */fractions.py
@@ -41,5 +41,7 @@ omit =
     */click/*
     */cryptography/*
     */flasgger/*
-    mistune.py/*
-
+    */mistune.py
+    manage.py
+    test.py
+    

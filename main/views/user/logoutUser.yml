@@ -6,25 +6,30 @@ consumes:
   - application/json
 produces:
   - application/json
-parameters:
-  - name: x-access-token
-    in: header
-    type: string
-    description: JWT token authorization
-    required: true
-definitions:
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
+# parameters:
+#   # - name: x-access-token
+#   #   in: header
+#   #   type: string
+#   #   description: JWT token authorization
+#   #   required: true
+#     - name: null
+#       # in: body
+#       description: Logout For a User
+      # schema:
+      #   $ref: '#/definitions/userLogin'
+# definitions:
+  # User:
+  #   type: object
+  #   properties:
+  #     id:
+  #       type: integer
+  #       format: int64
+  #     username:
+  #       type: string
+  #     email:
+  #       type: string
+  #     password:
+  #       type: string
 responses:
   200:
     description: You have successfully logged out

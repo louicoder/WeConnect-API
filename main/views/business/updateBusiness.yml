@@ -7,11 +7,11 @@ consumes:
 produces:
   - application/json
 parameters:
-  - name: x-access-token
-    in: header
-    type: string
-    description: JWT token authorization
-    # required: true
+  # - name: x-access-token
+  #   in: header
+  #   type: string
+  #   description: JWT token authorization
+  #   # required: true
   - name: businessId
     in: path
     description: ID of business to update
@@ -47,26 +47,26 @@ definitions:
     properties:
       name:
         type: string
-        example: "name change"
+        example: "new name"
       location:
         type: string
-        example: "location change"
+        example: "new location"
       category:
         type: string
-        example: "category change"
+        example: "new category"
       description:
         type: string  
-        example: "description change"
+        example: "new description"
 responses:
   200:
-    description: Successfully updated business
+    description: business has been updated successfully
     schema:
       $ref: '#/definitions/Business'
     examples:
      [{
-      "Message": "successfully updated business"
+      "Message": "business has been updated successfully"
     }]
   404:
-    description: Failure updating business
+    description: no records of that business exist
   401:
-    description: Invalid token / User signed out
+    description: you are logged out, please login

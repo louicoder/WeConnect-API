@@ -23,7 +23,6 @@ template = {
     "specs_route":"/apidocs/"
 }
 
-
 #swagger docs instanciation
 swagger = Swagger(app, template=template)
 
