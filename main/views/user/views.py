@@ -132,15 +132,15 @@ def login():
     elif data:
         username=data['username']
         password=data['password']
-        token = jwt.encode({'user':username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
+        # token = jwt.encode({'user':username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
         
         if USERS:            
             for x in USERS:
                 for k in x:
                     if x['username'] == username and check_password_hash(x['password'], password):
                         loggedInUser.append([x['userid'], x['username']])                  
-                        return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
-                        # return jsonify({'message':'Logged in Successfully'}), 200
+                        # return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
+                        return jsonify({'message':'logged in successfully'}), 200
                     else:                        
                         return jsonify({'message':'unauthorised access, wrong username or password'}), 401 # unauthorised access
     
