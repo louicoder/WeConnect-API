@@ -128,8 +128,15 @@ def login():
                         return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
                         # return jsonify({'message':'Logged in Successfully'}), 200
                     else:                        
-                        return jsonify({'message':'unauthorised access, wrong username or password'}), 401
+                        return jsonify({'message':'unauthorised access, wrong username or password'}), 400
     elif data:
+
+        if 'username' not in data.keys():
+            return jsonify({'message':'username is missing'}), 400
+
+        if 'password' not in data.keys():
+            return jsonify({'message':'password is missing'}), 400
+
         username=data['username']
         password=data['password']
         # token = jwt.encode({'user':username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
@@ -142,7 +149,7 @@ def login():
                         # return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
                         return jsonify({'message':'logged in successfully'}), 200
                     else:                        
-                        return jsonify({'message':'unauthorised access, wrong username or password'}), 401 # unauthorised access
+                        return jsonify({'message':'unauthorised access, wrong username or password'}), 401 # bad request
     
     else:
         return jsonify({"message":"Could not verify authetication"}), 401  # unauthorised access
@@ -151,11 +158,10 @@ def login():
     
 
 @userBlueprint.route('/api/v1/auth/resetpassword', methods=['PUT'])
-# @swag_from('resetUserPassword.yml')
+@swag_from('resetUserPassword.yml')
 def resetPassword():
     global USERS
     global loggedInUser
-    
 
     #check that we have users registered
     if not USERS:
@@ -168,8 +174,6 @@ def resetPassword():
     for x in loggedInUser:
         for y in x:
             username = x['username']
-
-   
 
     for x in USERS:
         for k in x:

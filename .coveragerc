@@ -44,4 +44,6 @@ omit =
     */mistune.py
     manage.py
     test.py
-    
+    main/views/user/userModel.py
+    main/views/business/businessModel.py
+    main/views/reviews/reviewModel.py

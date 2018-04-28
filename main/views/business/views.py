@@ -26,6 +26,22 @@ def create_business():
     
     if len(data.keys()) != 4:
         return jsonify({'message':'some fields are missing, try again'}), 400 #bad request
+    
+    if 'name' not in data.keys():
+        return jsonify({'message':'name is missing'}), 400 #bad request
+
+    if 'location' not in data.keys():
+        return jsonify({'message':'location is missing'}), 400 #bad request
+
+    if 'category' not in data.keys():
+        return jsonify({'message':'category is missing'}), 400 #bad request
+
+    if 'description' not in data.keys():
+        return jsonify({'message':'description is missing'}), 400 #bad request
+
+    if len(data['name']) < 5:
+        return jsonify({'message':'name of business should be five characters and above'}), 400 #bad request
+
 
     bizname = data['name']
     location = data['location']
