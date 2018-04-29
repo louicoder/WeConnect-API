@@ -77,7 +77,7 @@ def createuser():
 
     #check if the email contains an @ symbol
     if '@' not in data['email']:
-        return jsonify({'message':'email is invalid, @ missing'}), 400 #bad request
+        return jsonify({'message':'email is invalid, @ symbol missing'}), 400 #bad request
     
     #check whether username has already been taken.
     for x in USERS:

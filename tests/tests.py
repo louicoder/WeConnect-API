@@ -54,23 +54,31 @@ class TestUser(unittest.TestCase):
     
     def test_special_characters_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
-                                    data=json.dumps({"username": "xxxx!", "password": "somepassword", "email": "some@email.com"}))        
+                                    data=json.dumps({"username": "xxxx!", "password": "somepassword", "email": "some@email.com"}))
+        data = json.loads(response.data)
         self.assertEqual(400, response.status_code)
+        self.assertEqual('username contains special characters', data['message'])
 
     def test_short_username_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
-                                    data=json.dumps({"username": "xxx", "password": "somepassword", "email": "some@email.com"}))        
+                                    data=json.dumps({"username": "xxx", "password": "somepassword", "email": "some@email.com"}))
+        data = json.loads(response.data)
         self.assertEqual(400, response.status_code)
+        self.assertEqual('username should be five characters and above', data['message'])
 
-    def test_missing_username_registration(self):
+    def test_missing_username_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"email": "user@email.com", "password": "password"}))
+        data = json.loads(response.data)
         self.assertEqual(400, response.status_code)
+        self.assertEqual('username is missing', data['message'])
 
     def test_bad_email_format_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username":"personx", "email": "useremail.com", "password": "password"}))
+        data = json.loads(response.data)
         self.assertEqual(400, response.status_code)
+        self.assertEqual('email is invalid, @ symbol missing', data['message'])
 
     def test_missing_email_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
@@ -140,42 +148,84 @@ class TestBusiness(unittest.TestCase):
 
     def test_business_instance(self):
         self.assertIsInstance(self.busObj, Business)
-        
-    def test_create_business_successful(self):
-        global BUSINESSES
+
+    def test_create_business_successful(self):        
         response = self.client.post('/api/businesses', content_type='application/json',
-                                    data=json.dumps({"name": "name", "location": "kampala", "category": "somecategory", "description":"some description for the business"}))
-        self.assertTrue(201, response.status_code)
-        # self.assertEqual('')
+                                    data=json.dumps({"name": "nameofbusiness", "location": "kampala", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business successfully created', data['message'])
+        self.assertTrue(400, response.status_code)
+        
+    def test_business_already_exists(self):        
+        response = self.client.post('/api/businesses', content_type='application/json',
+                                    data=json.dumps({"name": "somebusiness", "location": "kampala", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business successfully created', data['message'])
+        self.assertTrue(201, response.status_code)        
         
     def test_short_name_create_business(self):
         response = self.client.post('/api/businesses', content_type='application/json',
                                     data=json.dumps({"name": "fsf", "location": "kampala", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('name of business should be five characters and above', data['message'])
         self.assertEqual(400, response.status_code)
 
     def test_name_missing_create_business(self):
         response = self.client.post('/api/businesses', content_type='application/json',
                                     data=json.dumps({"location": "kampala", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business name is missing', data['message'])
         self.assertEqual(400, response.status_code)
 
     def test_location_missing_create_business(self):
         response = self.client.post('/api/businesses', content_type='application/json',
                                     data=json.dumps({"name": "fsf", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('location is missing', data['message'])
         self.assertEqual(400, response.status_code)
     
     def test_category_missing_create_business(self):
         response = self.client.post('/api/businesses', content_type='application/json',
                                     data=json.dumps({"name": "fsf", "location": "kampala", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('category is missing', data['message'])
         self.assertEqual(400, response.status_code)
 
     def test_description_missing_create_business(self):
         response = self.client.post('/api/businesses', content_type='application/json',
                                     data=json.dumps({"name": "fsf", "location": "kampala", "category": "somecategory"}))
+        data = json.loads(response.data)
+        self.assertEqual('description is missing', data['message'])
         self.assertEqual(400, response.status_code)        
 
     def test_delete_business_failed(self):
         response = self.client.delete('/api/businesses/123123123', content_type='application/json')
-        self.assertEqual(404, response.status_code)
+        data = json.loads(response.data)
+        self.assertEqual('No business has that id, nothing was deleted', data['message'])
+        self.assertEqual(400, response.status_code)
+
+    def test_business_name_with_special_characters(self):
+        response = self.client.post('/api/businesses', content_type='application/json',
+                                    data=json.dumps({"name":"business!", "location": "kampala", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business name contains special characters, try again', data['message'])
+        self.assertEqual(400, response.status_code)
+
+    def test_business_location_with_special_characters(self):
+        response = self.client.post('/api/businesses', content_type='application/json',
+                                    data=json.dumps({"name":"business", "location": "kampala!", "category": "somecategory", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business location contains special characters, try again', data['message'])
+        self.assertEqual(400, response.status_code)
+
+    def test_business_category_with_special_characters(self):
+        response = self.client.post('/api/businesses', content_type='application/json',
+                                    data=json.dumps({"name":"business", "location": "kampala", "category": "somecategory!", "description":"some description for the business"}))
+        data = json.loads(response.data)
+        self.assertEqual('business category contains special characters, try again', data['message'])
+        self.assertEqual(400, response.status_code)
+
+    
         
 
     def test_update_business_successful(self):
@@ -186,7 +236,7 @@ class TestBusiness(unittest.TestCase):
 
     def test_update_business_failed(self):
         response = self.client.put('/api/businesses')
-        pass
+        
     
     
 

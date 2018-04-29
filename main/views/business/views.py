@@ -24,11 +24,11 @@ def create_business():
     jsn= request.data
     data = json.loads(jsn)
     
-    if len(data.keys()) != 4:
-        return jsonify({'message':'some fields are missing, try again'}), 400 #bad request
+    # if len(data.keys()) != 4:
+    #     return jsonify({'message':'some fields are missing, try again'}), 400 #bad request
     
     if 'name' not in data.keys():
-        return jsonify({'message':'name is missing'}), 400 #bad request
+        return jsonify({'message':'business name is missing'}), 400 #bad request
 
     if 'location' not in data.keys():
         return jsonify({'message':'location is missing'}), 400 #bad request
@@ -53,21 +53,17 @@ def create_business():
     # check business name for special characters
     for x in bizname:
         if x in specialChars:
-            return jsonify({'message':'business name contains special characters, try again'})
+            return jsonify({'message':'business name contains special characters, try again'}), 400
 
     # check location for special characters
     for x in location:
         if x in specialChars:
-            return jsonify({'message':'location contains special characters, try again'})
+            return jsonify({'message':'business location contains special characters, try again'}), 400
 
     # check category for special characters
     for x in category:
         if x in specialChars:
-            return jsonify({'message':'category contains special characters, try again'})    
-
-    #check length of business name.
-    if len(bizname) < 5:
-        return jsonify({'message':'business name is short, it must be five characters and above'}), 400 #bad request
+            return jsonify({'message':'business category contains special characters, try again'}), 400
     
     for x in BUSINESSES:
         for k, v in x.items():
@@ -82,9 +78,9 @@ def create_business():
     res = busx.create_business()
     
     if res:
-        return jsonify({'message': 'Business successfully created'}), 201 #created
-    else:
-        return jsonify({'message':'Business was not created, Try again'}), 409 #conflict
+        return jsonify({'message': 'business successfully created'}), 201 #created
+    
+    return jsonify({'message':'business was not created, try again'}), 400 #conflict
 
 
 @businessBlueprint.route('/api/businesses/<string:id>', methods=['GET'])
