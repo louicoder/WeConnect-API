@@ -109,8 +109,8 @@ def login():
     jsn = request.data
     data= json.loads(jsn)
 
-    if loggedInUser:        
-        return jsonify({'message':'you are already logged in'}), 400 #bad request
+    # if loggedInUser:        
+    #     return jsonify({'message':'you are already logged in'}), 400 #bad request
     
     if not USERS:
         return jsonify({'message':'you are not yet registered'}), 401 # unauthorized access
@@ -140,6 +140,9 @@ def login():
         username=data['username']
         password=data['password']
         # token = jwt.encode({'user':username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
+
+        # if loggedInUser[1] == username:
+        #     return jsonify({'message':'you are already logged in'}), 400 #bad request
         
         if USERS:            
             for x in USERS:

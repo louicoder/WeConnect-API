@@ -14,6 +14,15 @@ from main.views.user.views import USERS
 
 class TestUser(unittest.TestCase):
 
+    # def __init__():
+    #     tear_down()
+    @staticmethod
+    def tear_down():
+        global loggedInUser
+        global USERS
+        del loggedInUser[:]
+        del USERS[:]
+
     def setUp(self):
         self.client = app.test_client()
         self.client.post('/api/v1/auth/register', content_type='application/json',
@@ -21,7 +30,7 @@ class TestUser(unittest.TestCase):
 
     def test_UserInstance(self):
         self.userObj1 = User(12323231313, 'louis', 'louis@eemail.com', generate_password_hash('password'))
-        self.assertIsInstance(self.userObj1, User)        
+        self.assertIsInstance(self.userObj1, User)
 
     def test_user_secret_key(self):
         pass
@@ -29,36 +38,18 @@ class TestUser(unittest.TestCase):
         res = 'thisISverysecret'
         self.assertEqual(res, SECRETKEY)
 
-    def test_user_registration_success_message(self):
+    def test_user_registration_success(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "louisa", "password": "somepassword", "email": "some@email.com"}))
         data = json.loads(response.data)
+        self.assertEqual(201, response.status_code)
         self.assertEqual('user has been successfully registered.', data['message'])
-
-    def test_user_login_successful(self):
-        response = self.client.post('/api/v1/auth/login', content_type='application/json',
-                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
-        data = json.loads(response.data)
-        self.assertEqual('logged in successfully', data['message'])
-        self.assertEqual(200, response.status_code)
-
-    def test_already_loggedin_user(self):
-        self.client.post('/api/v1/auth/login', content_type='application/json',
-                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
-        result = self.client.post('/api/v1/auth/login', content_type='application/json',
-                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
-        self.assertEqual(400, result.status_code)
-
-    def test_user_login_failed_wrong_username(self):        
-        response = self.client.post('/api/v1/auth/login', content_type='application/json',
-                                    data=json.dumps({"username": "lou", "password": "somepassword"}))
-        data = json.loads(response.data)
-        self.assertIn('unauthorised access, wrong username or password', data['message'])        
-        self.assertEqual(401, response.status_code)
 
     def test_user_already_exists_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "louis", "password": "somepassword", "email": "anotherperson@email.com"}))
+        data = json.loads(response.data)
+        self.assertEqual('user already exists', data['message'])
         self.assertEqual(400, response.status_code)
     
     def test_special_characters_registration(self):
@@ -74,33 +65,64 @@ class TestUser(unittest.TestCase):
     def test_missing_username_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"email": "user@email.com", "password": "password"}))
-        self.assertEquals(400, response.status_code)
+        self.assertEqual(400, response.status_code)
 
-    def test_bad_email_format_registration(self):
+    def test_bad_email_format_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username":"personx", "email": "useremail.com", "password": "password"}))
-        self.assertEquals(400, response.status_code)
+        self.assertEqual(400, response.status_code)
 
-    def test_missing_email_registration(self):
+    def test_missing_email_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "somepassword", "password": "somepassword"}))
-        self.assertEquals(400, response.status_code)    
+        data = json.loads(response.data)
+        self.assertEqual(400, response.status_code)
+        self.assertEqual('email is missing', data['message'])
         
-    def test_user_fields_createUser(self):
+    def test_data_keys_user_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
-                                    data=json.dumps({"userid":234234232, "username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))        
+                                    data=json.dumps({"userid":234234232, "username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
+        data = json.loads(response.data)
         self.assertTrue(400, response.status_code)
+        self.assertNotEqual(4, data.keys())
+
 
     def test_user_data_type(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
-        self.assertEquals('application/json', response.content_type)
+        self.assertEqual('application/json', response.content_type)    
 
-    def tearDown(self):
-        global loggedInUser
-        global USERS
-        del loggedInUser[:]
-        del USERS[:]    
+    def test_user_login_failed_wrong_username(self):        
+        response = self.client.post('/api/v1/auth/login', content_type='application/json',
+                                    data=json.dumps({"username": "lou", "password": "somepassword"}))
+        data = json.loads(response.data)
+        self.assertEqual('unauthorised access, wrong username or password', data['message'])        
+        self.assertEqual(401, response.status_code)
+
+    def test_user_login_failed_wrong_password(self):        
+        response = self.client.post('/api/v1/auth/login', content_type='application/json',
+                                    data=json.dumps({"username": "louis", "password": "password"}))
+        data = json.loads(response.data)
+        self.assertIn('unauthorised access, wrong username or password', data['message'])        
+        self.assertEqual(401, response.status_code)
+
+    def test_user_login_successful(self):
+        response = self.client.post('/api/v1/auth/login', content_type='application/json',
+                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
+        data = json.loads(response.data)
+        self.assertEqual('logged in successfully', data['message'])
+        self.assertEqual(200, response.status_code)
+
+    def test_already_loggedin_user(self):
+        # self.client.post('/api/v1/auth/login', content_type='application/json',
+        #                             data=json.dumps({"username": "louis", "password": "somepassword"}))
+        response = self.client.post('/api/v1/auth/login', content_type='application/json',
+                                    data=json.dumps({"username": "louis", "password": "password"}))
+        data = json.loads(response.data)
+        self.assertEqual(401, response.status_code)
+        self.assertEqual('unauthorised access, wrong username or password', data['message'])
+
+TestUser.tear_down()
         
         
 class TestBusiness(unittest.TestCase):
