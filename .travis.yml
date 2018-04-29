@@ -10,7 +10,7 @@ install:
 
 #script to run tests
 script:
-  - nosetests --with-coverage
+  - nosetests tests.tests --with-coverage
   - coverage report
 
 #update coveralls on cchanges
