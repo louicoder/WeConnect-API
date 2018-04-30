@@ -94,11 +94,10 @@ class TestUser(unittest.TestCase):
         self.assertTrue(400, response.status_code)
         self.assertNotEqual(4, data.keys())
 
-
     def test_user_data_type(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "fsfsf", "password": "somepassword", "email": "some@email.com"}))
-        self.assertEqual('application/json', response.content_type)    
+        self.assertEqual('application/json', response.content_type)
 
     def test_user_login_failed_wrong_username(self):        
         response = self.client.post('/api/v1/auth/login', content_type='application/json',
@@ -122,16 +121,12 @@ class TestUser(unittest.TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_already_loggedin_user(self):
-        # self.client.post('/api/v1/auth/login', content_type='application/json',
-        #                             data=json.dumps({"username": "louis", "password": "somepassword"}))
         response = self.client.post('/api/v1/auth/login', content_type='application/json',
                                     data=json.dumps({"username": "louis", "password": "password"}))
         data = json.loads(response.data)
         self.assertEqual(401, response.status_code)
         self.assertEqual('unauthorised access, wrong username or password', data['message'])
 
-TestUser.tear_down()
-        
         
 class TestBusiness(unittest.TestCase):
 
@@ -144,7 +139,6 @@ class TestBusiness(unittest.TestCase):
 
         self.client.post('/api/v1/auth/login', content_type='application/json',
                             data=json.dumps({"username": "louis", "password": "somepassword"}))
-
 
     def test_business_instance(self):
         self.assertIsInstance(self.busObj, Business)
@@ -223,44 +217,60 @@ class TestBusiness(unittest.TestCase):
                                     data=json.dumps({"name":"business", "location": "kampala", "category": "somecategory!", "description":"some description for the business"}))
         data = json.loads(response.data)
         self.assertEqual('business category contains special characters, try again', data['message'])
-        self.assertEqual(400, response.status_code)
-
-    
-        
+        self.assertEqual(400, response.status_code)        
 
     def test_update_business_successful(self):
-        # Business.create_business(self.busObj)
-        # result = Business.update_business(1231231231)
-        # self.assertIsNotNone(result)
-        pass
+        response = self.client.put('api/businesses/1231231231', content_type='application/json', data=json.dumps({'name':'businessdemo', 'location':'', 'category':'', 'description':''}))
 
-    def test_update_business_failed(self):
-        response = self.client.put('/api/businesses')
-        
-    
+        data = json.loads(response.data)
+        self.assertEqual('no records of that business exist', data['message'])
+        self.assertEqual(404, response.status_code)
+
+    def test_missing_keys_update_business(self):        
+        response = self.client.put('api/businesses/1231231231', content_type='application/json', data=json.dumps({'name':'businessdemo', 'location':'', 'category':''}))
+
+        data = json.loads(response.data)
+        self.assertEqual('some fields are missing, try again', data['message'])
+        self.assertEqual(400, response.status_code)
     
 
 class TestReviewRoutes(unittest.TestCase):
 
     def setUp(self):
-        # self.business = Business.create_business(self.)
+        self.client = app.test_client()        
         self.revObj = Reviews('12345', '12345', 'this is an example review')
+
+    def test_no_businesses_to_review(self):
+        global BUSINESSES
+        del BUSINESSES[:]
+        response =  self.client.post('/api/businesses/1231231231/reviews', content_type='application/json',
+                                    data=json.dumps({"review":"business review test"}))
+        data = json.loads(response.data)
+        self.assertEqual('no businesses exist', data['message'])
     
     def test_review_instance(self):
         self.assertIsInstance(self.revObj, Reviews)
 
-    def test_create_review_success(self):
-        # Business.create_business(self, 1231231231,'businessName', 435523454, 'kampala', 'tech', 'a technology business')
-        # review = Reviews.createNewReview(335343454, 1231231231, 'this is a test review')
-        # self.assertTrue(review)
-        pass
+    def test_review_key_missing(self):
+        global BUSINESSES
+        BUSINESSES.append({123123123:["businessname", 123456789, "kampala", "category1", "description1"]})
 
-    def test_get_reviews_success(self):
-        # Business.create_business(self, 1231231231,'businessName', 435523454, 'kampala', 'tech', 'a technology business')
-        # Reviews.createNewReview(335343454, 1231231231, 'this is a test review')
-        # result = Reviews.getBizReview(1231231231)
-        # self.assertTrue(result)
-        pass
+        response = self.client.post('/api/businesses/123123123/reviews', content_type='application/json',
+                                    data=json.dumps({"data":"demo data"}))
+        data = json.loads(response.data)
+        self.assertEqual('review is missing', data['message'])
+        self.assertEqual(400, response.status_code)
+
+    def test_create_review_failed(self):
+        global BUSINESSES
+        del BUSINESSES[:]
+        BUSINESSES.append({123123123:["businessname", 123456789, "kampala", "category1", "description1"]})
+
+        response = self.client.post('/api/businesses/1234567893455/reviews', content_type='application/json',
+                                    data=json.dumps({"review":"business review test"}))
+        data = json.loads(response.data)
+        self.assertEqual('no business with that id exists', data['message'])
+        self.assertEqual(400, response.status_code)    
     
 
 if __name__ == '__main__':

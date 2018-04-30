@@ -1,12 +1,9 @@
-from ..business.views import BUSINESSES
-from ..business.views import Business
+from ..business.views import BUSINESSES, Business
+
 REVIEWS=[]
 
-
-#  this is the review class handling all the reviews logic
-
 ######################################
-#           REVIEWS CLASS
+#           REVIEWS CLASS            #
 ######################################
 
 class Reviews():
@@ -20,14 +17,14 @@ class Reviews():
         self.review = review
 
     @staticmethod
-    def createNewReview(reviewId, busId, review):
+    def create_review(reviewId, busId, review):
         """function to create a new review. function return a boolean whether review was created or not"""
         global REVIEWS
         result = False
-        oldListLength = len(REVIEWS)        
+        old_list_length = len(REVIEWS)        
         REVIEWS.append({reviewId:[busId, review]})
         #lets chek the length of list before and after appending the review
-        if len(REVIEWS) > oldListLength:
+        if len(REVIEWS) > old_list_length:
             result = True #this means the list has changed
         else:
             result = False #this means the list hasn't changed

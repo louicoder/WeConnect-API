@@ -10,28 +10,39 @@ reviewBlueprint = Blueprint('reviews', __name__)
 
 @reviewBlueprint.route('/api/businesses/<string:id>/reviews', methods=['POST'])
 @swag_from('createReview.yml')
-def createReview(id):
+def create_review(id):
     """Function for creating a review for a business whose id is passed as a parameter"""
     global REVIEWS
     global BUSINESSES
+    found = [] #found business id matching passed one will be stored in this list
     
     jsn = request.data
-    data = json.loads(jsn)
+    data = json.loads(jsn)    
+
+    if 'review' not in data.keys():
+        return jsonify({"message":"review is missing"}), 400 #bad request
+
+    if data.keys() == 0:
+        return jsonify({"message":"fields are missing"}), 400 #bad request
 
     if not BUSINESSES:
-        return jsonify({'message':'no businesses exist'}), 404 #not found
-    else:
-        for x,y in enumerate(BUSINESSES, 0):
-            for key, val in y.items():
-                if key == id:
-                    revObj = Reviews(str(uuid4()), id, data['review'])
-                    res = revObj.createNewReview(str(uuid4()), id, data['review'])
-                    if res:
-                        return jsonify({'message':'review has been successfully created'}), 201 #created
-                    else:
-                        return jsonify({'message':'review was not created'}), 400 #bad request
-                else:
-                    return jsonify({'message':'no business exists with that id'}), 404 #not found
+        return jsonify({'message':'no businesses exist'}), 404 #not found    
+
+    for x in BUSINESSES:
+        for k in x.keys():
+            if id == k:
+                found.append(k)
+
+    #in case the business id matches any of the registered business ids.
+    if found:
+        revObj = Reviews(str(uuid4()), id, data['review'])
+        res = revObj.create_review(str(uuid4()), id, data['review'])
+        if res:
+            return jsonify({'message':'review has been successfully created'}), 201 #created
+        else:
+            return jsonify({'message':'review was not created'}), 400 #bad request
+            
+    return jsonify({'message':'no business with that id exists'}), 400 #bad request
 
 
 @reviewBlueprint.route('/api/businesses/<string:id>/reviews', methods=['GET'])

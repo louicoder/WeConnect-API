@@ -154,7 +154,7 @@ def update_business(id):
             for k, v in res.items():
                 busId = k
                 BUSINESSES[exists] = {busId : [name, loggedInUser[0], location, category, description]}
-                return jsonify({'message':'Business has been updated successfully'}), 200 #ok
+                return jsonify({'message':'business has been updated successfully'}), 200 #ok
         else:
             return jsonify({'message': 'no records of that business exist'}), 404 #not found
 
@@ -174,4 +174,4 @@ def delete_business(id):
         else:
             return jsonify({'message':'No business has that id, nothing was deleted'}), 400 #bad request
     else:
-        return jsonify({'message': 'No records of any Business Exist'}), 404 #not found
+        return jsonify({'message': 'no records of any business exist'}), 404 #not found
