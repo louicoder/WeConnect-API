@@ -45,6 +45,13 @@ class TestUser(unittest.TestCase):
         self.assertEqual(201, response.status_code)
         self.assertEqual('user has been successfully registered.', data['message'])
 
+    def test_user_login_successful(self):
+        response = self.client.post('/api/v1/auth/login', content_type='application/json',
+                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
+        data = json.loads(response.data)
+        self.assertEqual('logged in successfully', data['message'])
+        self.assertEqual(200, response.status_code)
+
     def test_user_already_exists_registration(self):
         response = self.client.post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username": "louis", "password": "somepassword", "email": "anotherperson@email.com"}))
@@ -112,13 +119,6 @@ class TestUser(unittest.TestCase):
         data = json.loads(response.data)
         self.assertIn('unauthorised access, wrong username or password', data['message'])        
         self.assertEqual(401, response.status_code)
-
-    def test_user_login_successful(self):
-        response = self.client.post('/api/v1/auth/login', content_type='application/json',
-                                    data=json.dumps({"username": "louis", "password": "somepassword"}))
-        data = json.loads(response.data)
-        self.assertEqual('logged in successfully', data['message'])
-        self.assertEqual(200, response.status_code)
 
     def test_already_loggedin_user(self):
         response = self.client.post('/api/v1/auth/login', content_type='application/json',

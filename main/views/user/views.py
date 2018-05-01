@@ -109,8 +109,8 @@ def login():
     jsn = request.data
     data= json.loads(jsn)
 
-    if len(loggedInUser) > 0:
-        return jsonify({'message':'you are already logged in'}), 400 #bad request
+    # if len(loggedInUser) > 0:
+    #     return jsonify({'message':'you are already logged in'}), 400 #bad request?
     
     if not USERS:
         return jsonify({'message':'you are not yet registered'}), 401 # unauthorized access
