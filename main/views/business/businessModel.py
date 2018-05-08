@@ -11,7 +11,7 @@ BUSINESSES=[]
 class Business():
     """class that handles bussiness logic ie. create business,view own businesses,view all businesses,
     delete a business and update business the functions in this class include
-    createBusiness, checkBusinessExists, updateBusiness, deleteBusiness, getOwnBusinesses, getAllBusinesses"""
+    create_business, get_one_business, update_business, delete_business, getOwnBusinesses, get_all_businesses"""
     
     def __init__(self, busId, busName, userId, busLocation, busCategory, busDescription):
         # initialise the variables here. business id,user id, business name, business location,
@@ -24,7 +24,7 @@ class Business():
         self.busDescription = busDescription
         self.businessList = []
 
-    def createBusiness(self, busId, busName, userId, busLocation, busCategory, busDescription):
+    def create_business(self):
         """function for creating a new business. funtion returns a boolean true if a business has been created and false 
         if business is not created."""
         global BUSINESSES
@@ -32,7 +32,7 @@ class Business():
         oldBizListLength = len(BUSINESSES) # length of busines ltist before manipulation.
         #create the list below with precise indexing as illustrated below
         # [0] = userId, [1] = busName, [2] = busLocation, [3] = busCategory, [4] = busDescription
-        BUSINESSES.append({busId:[busName, userId, busLocation, busCategory, busDescription]})
+        BUSINESSES.append({self.busId:[self.busName, self.userId, self.busLocation, self.busCategory, self.busDescription]})
         
         if len(BUSINESSES) > oldBizListLength:
             result = True #incase creating a business is successful return true.
@@ -41,7 +41,7 @@ class Business():
         return result
 
     @staticmethod
-    def checkBusinessExists(busId):
+    def get_one_business(busId):
         """function to check whether a business Exists or not. function return a boolean true if business exists and
         false if it does not exist."""
         index = None
@@ -56,7 +56,7 @@ class Business():
             return index
         
     @staticmethod
-    def updateBusiness(busId):
+    def update_business(busId):
         """this function is for updating business details. function returns a index to update"""   
         index = None
         global BUSINESSES
@@ -73,7 +73,7 @@ class Business():
             return biz
     
     @staticmethod
-    def deleteBusiness(busId):
+    def delete_business(busId):
         """this fuinction is responsible for deleting a business"""
         global BUSINESSES
         index = None
@@ -87,21 +87,21 @@ class Business():
             return index
 
     # @staticmethod
-    def getOwnBusinesses(self, userId):
-        """function checks for a peron's own created businesses. function returns 
-        a list of businesses attached to the passed userId"""        
-        foundrows=[] #we will store our found records in this list
-        #result = False
-        if self.businessList:
-            for x in self.businessList:
-                for val in x.values():
-                    if val[0] == userId:
-                        foundrows.append(x)                        
-            return foundrows
-        else:
-            return ''
+    # def getOwnBusinesses(self, userId):
+    #     """function checks for a peron's own created businesses. function returns 
+    #     a list of businesses attached to the passed userId"""        
+    #     foundrows=[] #we will store our found records in this list
+    #     #result = False
+    #     if self.businessList:
+    #         for x in self.businessList:
+    #             for val in x.values():
+    #                 if val[0] == userId:
+    #                     foundrows.append(x)                        
+    #         return foundrows
+    #     else:
+    #         return ''
         
-    def getAllBusinesses(self):
+    def get_all_businesses(self):
         """this function return all businesses that ar available. 
         the function returns a list of all businesses registered."""
         global BUSINESSES

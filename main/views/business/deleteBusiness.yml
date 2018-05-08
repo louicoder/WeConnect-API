@@ -3,11 +3,11 @@ Endpoint for deleting a businesses
   tags:
     - Business
   parameters:
-    - name: x-access-token
-      in: header
-      type: string
-      description: JWT token authorization
-      required: true
+    # - name: x-access-token
+    #   in: header
+    #   type: string
+    #   description: JWT token authorization
+    #   required: true
     - name: businessId
       in: path
       description: ID of business to delete
@@ -41,14 +41,14 @@ Endpoint for deleting a businesses
         
   responses:
     200:
-      description: business Successfully deleted 
+      description: business has been successfully deleted
       schema:
         $ref: '#/definitions/Business'
       examples:
         [{
-          "Message": "business Successfully deleted"
+          "Message": "business has been successfully deleted"
         }]
+    400:
+      description: no business has that id, nothing was deleted
     404:
-      description: Either Business does not exist or you are not the owner of this business
-    401:
-      description: Invalid token or the User has signed out
+      description: no records of any business exist

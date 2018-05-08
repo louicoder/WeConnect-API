@@ -2,12 +2,12 @@ Endpoint retrieving a list of all registered businesses
 ---
   tags:
     - Business
-  parameters:
-    - name: x-access-token
-      in: header
-      type: string
-      description: JWT token authorization
-      required: true
+  # parameters:
+  #   - name: x-access-token
+  #     in: header
+  #     type: string
+  #     description: JWT token authorization
+  #     required: true
     # - name: page
     #   in: query
     #   type: integer

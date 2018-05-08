@@ -7,11 +7,11 @@ consumes:
 produces:
   - application/json
 parameters:
-  - name: x-access-token
-    in: header
-    type: string
-    description: JWT token authorization
-    required: true
+  # - name: x-access-token
+  #   in: header
+  #   type: string
+  #   description: JWT token authorization
+  #   required: true
   - name: businessId
     in: path
     description: "ID of business to return"
@@ -54,7 +54,7 @@ definitions:
         example: "review for a business"
 responses:
   201:
-    description: Review has been successfully created
+    description: review has been successfully created
     schema:
       $ref: '#/definitions/Review'
     examples:
@@ -62,6 +62,7 @@ responses:
       "Message": "Review has been successfully created"
     }]
   400:
-    description: Failed to create review. make sure business exists or ther are no missing fields
-  401:
-    description: Invalid token or the User has signed out
+    description: review was not created
+  404:
+    description: no Business exists 
+    description: no business exists with that id
