@@ -4,54 +4,59 @@ from .reviewModel import Reviews, REVIEWS
 from ..business.views import BUSINESSES
 from uuid import uuid4
 from flasgger import Swagger, swag_from
-from ..user.views import loggedInUser, token_required
+from ..user.views import loggedInUser
 
 reviewBlueprint = Blueprint('reviews', __name__)
 
-
 @reviewBlueprint.route('/api/businesses/<string:id>/reviews', methods=['POST'])
 @swag_from('createReview.yml')
-# @token_required
-def createReview(id):
+def create_review(id):
+    """Function for creating a review for a business whose id is passed as a parameter"""
     global REVIEWS
     global BUSINESSES
+    found = [] #found business id matching passed one will be stored in this list
     
-    # revObj = Reviews('13123112', '23424234', 'Example review')
     jsn = request.data
-    data = json.loads(jsn)
+    data = json.loads(jsn)    
 
-    print(BUSINESSES)
+    if 'review' not in data.keys():
+        return jsonify({"message":"review is missing"}), 400 #bad request
+
+    if data.keys() == 0:
+        return jsonify({"message":"fields are missing"}), 400 #bad request
 
     if not BUSINESSES:
-        return jsonify({'message':'No Existing Businesses, Register one!'})
-    else:
-        
-        for x,y in enumerate(BUSINESSES, 0):
-            for key, val in y.items():
-                if key == id:
-                    revObj = Reviews(str(uuid4()), id, data['review'])
-                    res = revObj.createNewReview(str(uuid4()), id, data['review'])
-                    if res:
-                        return jsonify({'message':'Review has been Successfully Created.', 'review':REVIEWS}), 201
-                    else:
-                        return jsonify({'message':'Review was not created'}), 403
-                else:
-                    return jsonify({'message':'No Business Exists with that id'}), 404
+        return jsonify({'message':'no businesses exist'}), 404 #not found    
+
+    for x in BUSINESSES:
+        for k in x.keys():
+            if id == k:
+                found.append(k)
+
+    #in case the business id matches any of the registered business ids.
+    if found:
+        revObj = Reviews(str(uuid4()), id, data['review'])
+        res = revObj.create_review(str(uuid4()), id, data['review'])
+        if res:
+            return jsonify({'message':'review has been successfully created'}), 201 #created
+        else:
+            return jsonify({'message':'review was not created'}), 400 #bad request
+            
+    return jsonify({'message':'no business with that id exists'}), 400 #bad request
 
 
 @reviewBlueprint.route('/api/businesses/<string:id>/reviews', methods=['GET'])
 @swag_from('retrieveReviews.yml')
-# @token_required
-def getBusReviews(id):
+def get_business_reviews(id):
+    """Function for retrieving reviews of business whose id is passed as a parameter"""
     global REVIEWS
-    id = id
+    business_id = id
     if not REVIEWS:
-        return jsonify({'message':'No reviews For any business Exist so far!'})
+        return jsonify({'message':'no reviews of any business exist'}), 404 #not found
     else:
-        res = Reviews.getBizReview(id)
-        print(res)
-        if not res:
-            return jsonify({'message': 'no review found for that business'}), 409 #Conflict
+        result = Reviews.get_business_reviews(business_id)       
+        if not result:
+            return jsonify({'message': 'no review found for that business id'}), 400 #bad request
         else:
-            return jsonify({'reviews': res}), 200
+            return jsonify({'reviews': result}), 200
         

@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/louiCoder/WeConnect-API.svg?branch=feature)](https://travis-ci.org/louiCoder/WeConnect-API) [![Maintainability](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/maintainability)](https://codeclimate.com/github/louiCoder/WeConnect-API/maintainability) [![Coverage Status](https://coveralls.io/repos/github/louiCoder/WeConnect-API/badge.svg?branch=feature)](https://coveralls.io/github/louiCoder/WeConnect-API?branch=feature)
+[![Build Status](https://travis-ci.org/louiCoder/WeConnect-API.svg?branch=feature)](https://travis-ci.org/louiCoder/WeConnect-API) [![Maintainability](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/maintainability)](https://codeclimate.com/github/louiCoder/WeConnect-API/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
+[![Coverage Status](https://coveralls.io/repos/github/louiCoder/WeConnect-API/badge.svg?branch=feature)](https://coveralls.io/github/louiCoder/WeConnect-API?branch=feature)
+
 
 <!-- [![Test Coverage](https://api.codeclimate.com/v1/badges/a6c406da1fffc6d5fb75/test_coverage)](https://codeclimate.com/github/louiCoder/WeConnect-API/test_coverage) -->
 
@@ -51,7 +53,7 @@ WeConnect-Api provides a platform that brings businesses and individuals togethe
 
 #### The application is Hosted on Heroku on the link below.
     
-http://we-connect-louis.herokuapp.com or http://we-connect-louis.herokuapp.com/apidocs/
+http://we-connect-louis.herokuapp.com/apidocs/
 
 #### Get all project dependencies by running the command below.
 

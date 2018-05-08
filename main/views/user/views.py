@@ -13,58 +13,84 @@ userBlueprint = Blueprint('user', __name__)
 SECRETKEY = 'thisISverysecret'
 token = None
 
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):        
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
-        data =''
-        if not token:
-            return jsonify({'message':'token is missing!'}), 403
-        try:
-            data = jwt.decode(token, SECRETKEY)
-        except:
-            return jsonify({'message':'Token is invalid'}), 403
+# def token_required(f):
+#     @wraps(f)
+#     def decorated(*args, **kwargs):        
+#         if 'x-access-token' in request.headers:
+#             token = request.headers['x-access-token']
+#         data =''
+#         if not token:
+#             return jsonify({'message':'token is missing!'}), 403
+#         try:
+#             data = jwt.decode(token, SECRETKEY)
+#         except:
+#             return jsonify({'message':'Token is invalid'}), 403
 
-        return f(*args, **kwargs)
-    return decorated
+#         return f(*args, **kwargs)
+#     return decorated
 
 
 @userBlueprint.route('/api/v1/auth/register', methods=['POST'])
 @swag_from('createUser.yml')
-def createuser():
+def create_user():
     global USERS
     jsn = request.data
     data= json.loads(jsn)
-    if len(data.keys()) != 3:
-        return jsonify({'message':'cannot register because of missing fields, check email,username and password'}), 400 #bad request
+    # if len(data.keys()) != 3:
+    #     return jsonify({'message':'cannot register because of missing fields, check email,username and password'}), 400 #bad request
     
-    specialChars = ['@', '#', '$', '%', '^', '&', '*', '!', '(', ')', '/'] #, '(', ')', '?', '/', '\', '-']
-    username = data['username']
+    specialChars = ['@', '#', '$', '%', '^', '&', '*', '!', '/', '?', '-', '_']
+    
+    # check that username is not missing
+    if 'username' not in data.keys():
+        return jsonify({'message':'username is missing'}), 400 #bad request
+    else:
+        username = data['username']
+
+    #check that email is not missing
+    if 'email' not in data.keys():
+        return jsonify({'message':'email is missing'}), 400 #bad request
+    else:
+        email = data['email']
+
+    #check that password is not missing
+    if 'password' not in data.keys():
+        return jsonify({'message':'password is missing'}), 400 #bad request
+    else:
+        password = data['password']
+
+    #check whether username contains special characters, its forbidden!
     for x in username:
         if x in specialChars:
-            return jsonify({'message':'username contains special characters, try again'}), 400 #bad request
+            return jsonify({'message':'username contains special characters'}), 400 #bad request
 
-    # usernames=[]
-    # print(USERS)
+    #check length of username, should be five characters and above
+    if len(username) < 5:
+        return jsonify({'message':'username should be five characters and above'}), 400 #bad request
+
+    if len(data['password']) < 5:
+        return jsonify({'message':'password should be five characters and above'}), 400 #bad request
+
+    #check if the email contains a dot
+    if '.' not in data['email']:
+        return jsonify({'message':'email is invalid, dot missing'}), 400 #bad request
+
+    #check if the email contains an @ symbol
+    if '@' not in data['email']:
+        return jsonify({'message':'email is invalid, @ symbol missing'}), 400 #bad request
+    
+    #check whether username has already been taken.
     for x in USERS:
         for k, v in x.items():
-            if v == data['username']:            
+            if v == username:            
                 return jsonify({'message':'user already exists'}), 400 #bad request
     
-
-    if data['username'] and data['email'] and data['password'] and len(data['username']):
-        username = data['username']
-        email = data['email']
-        password = data['password']
-        password = generate_password_hash(password)            
-        USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})
-        print(USERS)
-        return jsonify({"message":"User has been Successfully registered."}), 200
+    password = generate_password_hash(password)            
+    USERS.append({"userid":str(uuid4()), "username":username, "email":email, "password":password})
+    return jsonify({"message":"user has been successfully registered."}), 201 #created
 
 @userBlueprint.route('/api/v1/auth/getusers', methods=['GET'])
-# @token_required
-def getusers():
+def get_users():
     global USERS    
     if not USERS:
         return jsonify({'message':'No users found in the system'})
@@ -76,72 +102,116 @@ def getusers():
 @userBlueprint.route('/api/v1/auth/login', methods=['POST'])
 @swag_from('loginUser.yml')
 def login():
-
+    global loggedInUser
+    global USERS
     auth = request.authorization
+    
+    jsn = request.data
+    data= json.loads(jsn)
 
+    # if len(loggedInUser) > 0:
+    #     return jsonify({'message':'you are already logged in'}), 400 #bad request?
+    
+    if not USERS:
+        return jsonify({'message':'you are not yet registered'}), 401 # unauthorized access
+    
     if auth:
         username=auth.username
         password=auth.password
         token = jwt.encode({'user':auth.username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
         
-        if USERS:
-            
+        if USERS:            
             for x in USERS:
                 for k in x:
                     if x['username'] == username and check_password_hash(x['password'], password):
                         loggedInUser.append([x['userid'], x['username']])                  
-                        return jsonify({'token': token.decode('UTF-8')}), 200                      
+                        return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
+                        # return jsonify({'message':'Logged in Successfully'}), 200
                     else:                        
-                        return jsonify({'message':'unauthorised access'}), 401
-        else:
-            return make_response(jsonify({'message':'No users found in the system'})), 404
-    else:
-        return jsonify({"message":"Could not verify authetication"})
+                        return jsonify({'message':'unauthorised access, wrong username or password'}), 400
+    elif data:
+
+        if 'username' not in data.keys():
+            return jsonify({'message':'username is missing'}), 400
+
+        if 'password' not in data.keys():
+            return jsonify({'message':'password is missing'}), 400
+
+        username=data['username']
+        password=data['password']
+        # token = jwt.encode({'user':username, 'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, SECRETKEY)
+
+        # if loggedInUser[1] == username:
+        #     return jsonify({'message':'you are already logged in'}), 400 #bad request
         
-    return make_response(jsonify({'message':'couldnt verify'})), 401
+        if USERS:
+            for x in USERS:
+                for k in x:
+                    if x['username'] == username and check_password_hash(x['password'], password):
+                        loggedInUser.append([x['userid'], x['username']])                  
+                        # return jsonify({'token': token.decode('UTF-8'), 'message':'logged in successfully'}), 200
+                        return jsonify({'message':'logged in successfully'}), 200
+                    else:                        
+                        return jsonify({'message':'unauthorised access, wrong username or password'}), 401 # bad request
+    
+    else:
+        return jsonify({"message":"Could not verify authetication"}), 401  # unauthorised access
+        
+    return make_response(jsonify({'message':'couldn''t verify login'})), 401 # unauthorised access
     
 
-@userBlueprint.route('/api/v1/auth/resetpassword', methods=['PUT'])
-# @token_required
+@userBlueprint.route('/api/v1/auth/resetpassword', methods=['POST'])
 @swag_from('resetUserPassword.yml')
-def resetPassword():
+def reset_password():
     global USERS
     global loggedInUser
-    
-    if len(loggedInUser) == 0:
-        return jsonify({"message":"please first login"}), 401
 
-    for x in loggedInUser:
-        for y in x:
-            username = x['username']
+    jsn = request.data
+    data= json.loads(jsn)
 
+    if len(data.keys()) == 0:
+        return jsonify({'message':'nothin has been provided'}), 400
+
+    if 'password' not in data.keys():
+        return jsonify({'message':'password field is missing'}), 400
+
+    new_password = data['password']
+
+    #check that we have users registered
     if not USERS:
-        return jsonify({'message': 'no users found in system'}), 404
-    else:
-        for x in USERS:
-            for k in x:
-                if x['username'] == username:
-                    x['password'] = 'password'
-                    print(USERS)
-                    return jsonify({'message':'password Reset successful'}), 200
-                else:
-                    return jsonify({'message':'password change was not successful'}), 400
+        return jsonify({"message":"no users found, first register"}), 404 # not found
+
+    #check if user is already logged in
+    if len(loggedInUser) == 0:
+        return jsonify({"message":"please first login"}), 401 # unauthorized access
+
+    #get username for current logged in user    
+    for x in loggedInUser:
+        username = x[1]
+
+    # lets only reset password for currently logged in user.
+    for x in USERS:
+        for k, v in x.items():
+            if k == 'username':
+                if v == username:
+                    x['password'] = generate_password_hash(new_password)
+                    return jsonify({'message':'password was reset successfully'}), 200
+            
+    return jsonify({'message':'password reset was not successful'}), 400
 
 @userBlueprint.route('/api/v1/auth/logout', methods=['POST'])
-# @token_required
 @swag_from('logoutUser.yml')
 def logout():
     global loggedInUser
-    global USERS
-    request.authorization = None
-    # del USERS[:]
-    del loggedInUser[:]
+    global USERS   
 
-    if not request.authorization:        
-        return jsonify({'message':'you have successfully logged out'}), 200
+    if not loggedInUser:
+        return jsonify({'message':'you are already logged out'}), 400 #bad request
+
+    if len(loggedInUser) > 0:
+        del loggedInUser[:]
+        request.authorization = None
+        return jsonify({'message':'you have successfully logged out'}), 200 #ok
     else:        
-        return jsonify({'message':'something went wrong, please try again'}), 400
+        return jsonify({'message':'something went wrong, please try again'}), 400 #bad request
     
-
-
-

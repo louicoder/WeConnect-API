@@ -6,7 +6,7 @@ USERS=[] #global variable for users.
 
 class User():
     """this class indicates the user
-    functions include createUser,checkBusinessExists"""
+    functions include createUser,get_one_business"""
     
     def __init__(self, userId, userName, email, password):
         # initialise the variables for this class here
